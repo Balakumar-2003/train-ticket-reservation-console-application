@@ -1,0 +1,116 @@
+package ticketbooking;
+
+import java.util.*;
+
+public class train {
+	static int aUb=1;
+	static int aMb=1;
+	static int aLb=1;
+	static int aRACb=1;
+	static int aWAIT=1;
+	static List<Integer> Up=new ArrayList<Integer>(Arrays.asList(1));
+	static List<Integer> Mp=new ArrayList<Integer>(Arrays.asList(1));
+	static List<Integer> Lp=new ArrayList<Integer>(Arrays.asList(1));
+	static List<Integer> RACp=new ArrayList<Integer>(Arrays.asList(1));
+	static List<Integer> WAITp=new ArrayList<Integer>(Arrays.asList(1));
+	
+	static Queue<Integer> RACList=new LinkedList<Integer>();
+	static Queue<Integer> WAITList=new LinkedList<Integer>();
+	static List<Integer>  BookList=new ArrayList<Integer>();
+	
+	static Map<Integer,passenger> passengerdetails=new HashMap<Integer,passenger>();
+	
+	public static void booking(passenger p,int number,String alloted) {
+		p.number=number;
+		p.alloted=alloted;
+		passengerdetails.put(p.passengerId, p);
+		BookList.add(p.passengerId);
+		System.out.println("...........booking confirmed");
+		System.out.println("passengerId: "+p.passengerId);
+		System.out.println("passenger name: "+p.passengername);
+		System.out.println("passenger gender: "+p.gender);
+		System.out.println("berth alloted: "+p.alloted);
+		System.out.println("seat number: "+p.number+p.alloted);
+	}
+	public static void RACbooking(passenger p,int number,String alloted) {
+		p.number=number;
+		p.alloted=alloted;
+		passengerdetails.put(p.passengerId, p);
+		RACList.add(p.passengerId);
+		System.out.println("...........RAC booked");
+		System.out.println("passengerId: "+p.passengerId);
+		System.out.println("passenger name: "+p.passengername);
+		System.out.println("passenger gender: "+p.gender);
+		System.out.println("berth alloted: "+p.alloted);
+		System.out.println("seat number: "+p.number+p.alloted);
+		
+	}
+	public static void WAITbooking(passenger p,int number,String alloted) {
+	p.number=number;
+	p.alloted=alloted;
+	passengerdetails.put(p.passengerId,p);
+	WAITList.add(p.passengerId);
+	System.out.println("...........booking confirmed");
+	System.out.println("passengerId: "+p.passengerId);
+	System.out.println("passenger name: "+p.passengername);
+	System.out.println("passenger gender: "+p.gender);
+	System.out.println("berth alloted: "+p.alloted);
+	System.out.println("seat number: "+p.number+p.alloted);
+	}
+	public static void displaydetails() {
+	    if(passengerdetails.size()<=0) {
+	    	System.out.println("no one booked till now");
+	    }
+	    else {
+		for(passenger k:passengerdetails.values()) {
+			System.out.println("passengerId: "+k.passengerId);
+			System.out.println("passenger name: "+k.passengername);
+			System.out.println("passenger gender: "+k.gender);
+			System.out.println("berth alloted: "+k.alloted);
+			System.out.println("seat number: "+k.number+k.alloted);
+		}
+		
+	    }
+	}
+	public static void cancel(int id) {
+		passenger p=passengerdetails.get(id);
+		int pnumber=p.number;
+		passengerdetails.remove(Integer.valueOf(id));
+		BookList.remove(id);
+		System.out.println("......................ticket canceled");
+		if(p.alloted.equals("L")) {
+			aLb++;
+			Lp.add(pnumber);
+		}
+		else if(p.alloted.equals("M")) {
+			aMb++;
+			Mp.add(pnumber);
+		}
+		else if(p.alloted.equals("U")) {
+			aUb++;
+			Up.add(pnumber);
+		}
+		if(RACList.size()>0) {
+			passenger racp=passengerdetails.get(RACList.poll());
+			int rnumber=racp.number;
+			RACList.remove(racp.passengerId);
+			RACp.add(rnumber);
+			aRACb++;
+			if(WAITList.size()>0) {
+				passenger waitp=passengerdetails.get(WAITList.poll());
+				int wnumber=waitp.number;
+				WAITList.remove(waitp.passengerId);
+				WAITp.add(wnumber);
+				aWAIT++;
+				
+				waitp.number=RACp.get(0);
+				waitp.alloted="RAC";
+				RACList.add(waitp.passengerId);
+				RACp.remove(0);
+				aRACb--;
+			}
+			trainresarvation.booking(racp);
+		}
+	}
+
+}
