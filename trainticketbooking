@@ -1,0 +1,113 @@
+package ticketbooking;
+import java.util.*;
+public class trainresarvation {
+	public static void booking(passenger p) {
+		train tb=new train();
+		if(train.aWAIT<=0) {
+			System.out.println("Sorry no tickets available");
+		}
+		else if((train.aLb>0 && p.berthpref.equals("L")) ||(train.aMb>0 && p.berthpref.equals("M")) || (train.aUb>0 && p.berthpref.equals("U"))) {
+		if(p.berthpref.equals("L")) {
+			System.out.println("lower berth is given");
+			train.booking(p,(train.Lp.get(0)),"L");
+			train.Lp.remove(0);
+			train.aLb--;
+		}
+		else if(p.berthpref.equals("M")) {
+			System.out.println("Middle berth is given");
+			train.booking(p,(train.Mp.get(0)),"M");
+			train.Mp.remove(0);
+			train.aMb--;
+		}
+		else if(p.berthpref.equals("U")) {
+			System.out.println("Upper berth is given");
+			train.booking(p,(train.Up.get(0)),"U");
+			train.Up.remove(0);
+			train.aUb--;
+		}
+		}
+		else if(train.aLb>0) {
+			System.out.println("lower berth is given");
+			train.booking(p,(train.Lp.get(0)),"L");
+			train.Lp.remove(0);
+			train.aLb--;
+		}
+		else if(train.aMb>0) {
+			System.out.println("Middle berth is given");
+			train.booking(p,(train.Mp.get(0)),"M");
+			train.Mp.remove(0);
+			train.aMb--;
+		}
+		else if(train.aUb>0) {
+			System.out.println("Upper berth is given");
+			train.booking(p,(train.Up.get(0)),"U");
+			train.Up.remove(0);
+			train.aUb--;
+			
+		}
+		else if(train.aRACb>0) {
+			System.out.println("RAC is given");
+			train.RACbooking(p,(train.RACp.get(0)),"RAC");
+			train.RACp.remove(0);
+			train.aRACb--;
+		}
+		else if (train.aWAIT>0) {
+			System.out.println("waiting list is given");
+			train.WAITbooking(p,(train.WAITp.get(0)),"WAIT");
+			train.WAITp.remove(0);
+			train.aWAIT--;
+		}
+	}
+	public static void cancel(int id) {
+		if(!train.passengerdetails.containsKey(id)) {
+			System.out.println("the given id is wrong");
+		}
+		else {
+			train.cancel(id);
+		}
+	}
+    public static void main(String[] args) {
+		Scanner scan=new Scanner(System.in);
+		boolean loop=true;
+		int choice=0;
+		while(loop) {
+			System.out.println("1.booking \n2.cancel \n3.availability \n4.passenger details \n5.close");
+			choice=scan.nextInt();
+			switch(choice) {
+			case 1:System.out.println("Enter passenger name");
+			       String name=scan.next();
+			       System.out.println("Enter the passenger age");
+			       int age=scan.nextInt();
+			       System.out.println("Enter the gender F/M");
+			       String gender=scan.next();
+			       System.out.println("Enter the berth preference");
+			       String bp=scan.next();
+			       passenger p=new passenger(name,age,gender,bp);
+			       booking(p);
+			       break;
+			case 2:
+				System.err.println("enter the id");
+				int id=scan.nextInt();
+				cancel(id);
+				break;
+			case 3:
+				System.out.println("available upperberth: "+train.aUb);
+				System.out.println("available lowerberth: "+train.aLb);
+				System.out.println("available middleberth: "+train.aMb);
+				System.out.println("available RACberth: "+train.aRACb);
+				System.out.println("available waitinglist: "+train.aWAIT);
+				break;
+			case 4:
+				train.displaydetails();
+				break;
+				
+			case 5:loop=false;
+			System.out.println("thank you for visiting");
+			break;
+			default : System.out.println("invalid input");
+			 break;
+			}
+		}
+	}
+
+}
